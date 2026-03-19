@@ -1,0 +1,10 @@
+name: 5243-hw2
+title:
+username: w-analytics
+account: w-analytics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16942910
+bundleId: 11733652
+url: https://w-analytics.shinyapps.io/5243-hw2/
+version: 1
