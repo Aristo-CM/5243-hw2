@@ -61,6 +61,6 @@ shiny::runApp()
   - Integrated built-in and uploaded dataset functionality  
   - Deployed the application to shinyapps.io  
 
-- Member 2: Data Cleaning Module  
+- Zhengxuan Xiao: Data Cleaning Module  
 - Member 3: Feature Engineering Module  
 - Member 4: EDA Module  
