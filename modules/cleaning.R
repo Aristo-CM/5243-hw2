@@ -2,7 +2,7 @@ library(shiny)
 library(DT)
 library(stringr)
 
-# The Cleaning module is responsible for basic data preprocessing before feature engineering and exploratory analysis. 
+# The Cleaning module is responsible for basic data preprocessing before feature engineering and exploratory analysis.
 # It allows users to clean and standardize the dataset through an interactive interface. The module supports duplicate removal, missing value handling, numeric scaling, and outlier removal. 
 # After the selected cleaning steps are applied, the processed dataset is stored and displayed for further analysis in the downstream modules.
 
