@@ -28,7 +28,7 @@ https://w-analytics.shinyapps.io/5243-hw2/
 
 Run the following in R:
 
-install.packages(c("shiny", "DT", "readr", "readxl", "jsonlite"))
+install.packages(c("shiny", "DT", "readr", "readxl", "jsonlite", "ggplot2", "plotly"))
 
 ---
 
