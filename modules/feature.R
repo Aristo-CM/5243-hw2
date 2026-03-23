@@ -1,20 +1,98 @@
+library(shiny)
+library(DT)
+library(stringr)
+
 feature_ui <- function(id) {
   ns <- NS(id)
   
   tabPanel(
     "Feature Engineering",
-    h3("Feature Engineering"),
-    p("This section will be implemented by Person 3."),
-    p("Suggested tasks: create/modify features, log transform, square, binning, arithmetic combinations.")
+    fluidPage(
+      h3("Feature Engineering"),
+      p("This section allows users to create new columns through the features of other columns."),
+      p("Suggested tasks: create/modify features, log transform, square, binning, arithmetic combinations."),
+
+      sidebarLayout(
+        sidebarPanel(
+          uiOutput(ns("var_select")),
+          radioButtons(ns("transformation"), "Choose Transformation:",
+                      choices = c("None", "Log-transformation", "Normalizing", "Standardizing")),
+          actionButton(ns("apply_feature"), "Apply Transformation")
+        ),
+        mainPanel(
+          h4("Feature Engineering Summary"),
+          verbatimTextOutput(ns("summary")),
+          hr(),
+          h4("Data Preview with New Features"),
+          DTOutput(ns("featured_table"))
+        )
+      )
+    )
   )
 }
 
 feature_server <- function(id, cleaned_data, featured_data) {
   moduleServer(id, function(input, output, session) {
+    
+    summary_text <- reactiveVal("No feature engineering has been applied yet.")
+
+    output$var_select <- renderUI({
+      req(cleaned_data())
+      cols <- names(cleaned_data())
+      selectInput("variable", "Select Variable:", choices = c(cols))
+    })
+
     observe({
-      if (!is.null(cleaned_data())) {
+      if (!is.null(cleaned_data()) && is.null(featured_data())) {
         featured_data(cleaned_data())
       }
+    })
+
+    observeEvent(input$apply_feature, {
+      req(input$variable, input$transformation, cleaned_data())
+      df <- cleaned_data()
+      temp <- cleaned_data()[input$variable]
+      if (!is.numeric(temp)) {
+        return(NULL)
+      }
+
+      original_rows <- nrow(df)
+      original_cols <- ncol(df)
+      summary_lines <- c()
+      
+      if (input$transformation == "Log-transformation") {
+        df[paste(input$variable, ".log", sep="")] <- log(temp + 1)
+        summary_lines <- c(summary_lines, "Created a new feature by performing a log transformation on an existing column.")
+      } else if (input$transformation == "Normalizing") {
+        df[paste(input$variable, ".norm", sep="")] <- (temp - min(temp)) / (max(temp) - min(temp))
+        summary_lines <- c(summary_lines, "Created a new feature by normalizing an existing column.")
+      } else if (input$transformation == "Standardizing") {
+        df[paste(input$variable, ".standard", sep="")] <- scale(temp)
+        summary_lines <- c(summary_lines, "Created a new feature by standard scaling an existing column.")
+      }
+      
+      featured_data(df)
+      
+      summary_lines <- c(
+        summary_lines,
+        paste("Original dataset size:", original_rows, "rows x", original_cols, "columns"),
+        paste("Final dataset size:", nrow(df), "rows x", ncol(df), "columns")
+      )
+      
+      summary_text(paste(summary_lines, collapse = "\n"))
+    })
+
+    output$summary <- renderText({
+      summary_text()
+    })
+    
+    output$featured_table <- renderDT({
+      req(featured_data())
+      datatable(
+        featured_data(),
+        options = list(pageLength = 10, scrollX = TRUE),
+        rownames = FALSE
+      )
     })
   })
 }

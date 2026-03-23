@@ -62,5 +62,5 @@ shiny::runApp()
   - Deployed the application to shinyapps.io  
 
 - Zhengxuan Xiao: Data Cleaning Module  
-- Member 3: Feature Engineering Module  
+- Justine Dugger-Ades: Feature Engineering Module  
 - Member 4: EDA Module  
