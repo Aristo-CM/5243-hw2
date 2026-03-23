@@ -9,14 +9,16 @@ feature_ui <- function(id) {
     "Feature Engineering",
     fluidPage(
       h3("Feature Engineering"),
-      p("This section allows users to create new columns through the features of other columns."),
-      p("Suggested tasks: create/modify features, log transform, square, binning, arithmetic combinations."),
-
+      p("This section allows users to create new columns through transformations of existing columns."),
+      
       sidebarLayout(
         sidebarPanel(
           uiOutput(ns("var_select")),
-          radioButtons(ns("transformation"), "Choose Transformation:",
-                      choices = c("None", "Log-transformation", "Normalizing", "Standardizing")),
+          radioButtons(
+            ns("transformation"),
+            "Choose Transformation:",
+            choices = c("None", "Log-transformation", "Normalizing", "Standardizing")
+          ),
           actionButton(ns("apply_featured"), "Apply Transformation")
         ),
         mainPanel(
@@ -33,42 +35,55 @@ feature_ui <- function(id) {
 
 feature_server <- function(id, cleaned_data, featured_data) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
     
     summary_text <- reactiveVal("No feature engineering has been applied yet.")
-
+    
     output$var_select <- renderUI({
       req(cleaned_data())
       cols <- names(cleaned_data())
-      selectInput("variable", "Select Variable:", choices = c(cols))
+      selectInput(ns("variable"), "Select Variable:", choices = cols)
     })
-
+    
     observe({
       if (!is.null(cleaned_data()) && is.null(featured_data())) {
         featured_data(cleaned_data())
       }
     })
-
+    
     observeEvent(input$apply_featured, {
       req(input$variable, input$transformation, cleaned_data())
+      
       df <- cleaned_data()
-      temp <- df[input$variable]
+      temp <- df[[input$variable]]
+      
       if (!is.numeric(temp)) {
+        summary_text("Please select a numeric variable.")
         return(NULL)
       }
-
+      
+      if (input$transformation == "None") {
+        featured_data(df)
+        summary_text("No transformation selected.")
+        return(NULL)
+      }
+      
       original_rows <- nrow(df)
       original_cols <- ncol(df)
       summary_lines <- c()
       
       if (input$transformation == "Log-transformation") {
-        df[paste(input$variable, ".log", sep = "")] <- log(temp + 1)
-        summary_lines <- c(summary_lines, "Created a new feature by performing a log transformation on an existing column.")
+        df[[paste0(input$variable, ".log")]] <- log(temp + 1)
+        summary_lines <- c(summary_lines, "Created a new feature using log transformation.")
+        
       } else if (input$transformation == "Normalizing") {
-        df[paste(input$variable, ".norm", sep = "")] <- (temp - min(temp)) / (max(temp) - min(temp))
-        summary_lines <- c(summary_lines, "Created a new feature by normalizing an existing column.")
+        df[[paste0(input$variable, ".norm")]] <- (temp - min(temp, na.rm = TRUE)) / 
+          (max(temp, na.rm = TRUE) - min(temp, na.rm = TRUE))
+        summary_lines <- c(summary_lines, "Created a new feature using normalization.")
+        
       } else if (input$transformation == "Standardizing") {
-        df[paste(input$variable, ".standard", sep = "")] <- scale(temp)
-        summary_lines <- c(summary_lines, "Created a new feature by standard scaling an existing column.")
+        df[[paste0(input$variable, ".standard")]] <- as.numeric(scale(temp))
+        summary_lines <- c(summary_lines, "Created a new feature using standardization.")
       }
       
       featured_data(df)
@@ -81,7 +96,7 @@ feature_server <- function(id, cleaned_data, featured_data) {
       
       summary_text(paste(summary_lines, collapse = "\n"))
     })
-
+    
     output$summary <- renderText({
       summary_text()
     })
