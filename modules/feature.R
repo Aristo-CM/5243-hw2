@@ -17,7 +17,7 @@ feature_ui <- function(id) {
           uiOutput(ns("var_select")),
           radioButtons(ns("transformation"), "Choose Transformation:",
                       choices = c("None", "Log-transformation", "Normalizing", "Standardizing")),
-          actionButton(ns("apply_feature"), "Apply Transformation")
+          actionButton(ns("apply_featured"), "Apply Transformation")
         ),
         mainPanel(
           h4("Feature Engineering Summary"),
@@ -48,10 +48,10 @@ feature_server <- function(id, cleaned_data, featured_data) {
       }
     })
 
-    observeEvent(input$apply_feature, {
+    observeEvent(input$apply_featured, {
       req(input$variable, input$transformation, cleaned_data())
       df <- cleaned_data()
-      temp <- cleaned_data()[input$variable]
+      temp <- df[input$variable]
       if (!is.numeric(temp)) {
         return(NULL)
       }
@@ -61,13 +61,13 @@ feature_server <- function(id, cleaned_data, featured_data) {
       summary_lines <- c()
       
       if (input$transformation == "Log-transformation") {
-        df[paste(input$variable, ".log", sep="")] <- log(temp + 1)
+        df[paste(input$variable, ".log", sep = "")] <- log(temp + 1)
         summary_lines <- c(summary_lines, "Created a new feature by performing a log transformation on an existing column.")
       } else if (input$transformation == "Normalizing") {
-        df[paste(input$variable, ".norm", sep="")] <- (temp - min(temp)) / (max(temp) - min(temp))
+        df[paste(input$variable, ".norm", sep = "")] <- (temp - min(temp)) / (max(temp) - min(temp))
         summary_lines <- c(summary_lines, "Created a new feature by normalizing an existing column.")
       } else if (input$transformation == "Standardizing") {
-        df[paste(input$variable, ".standard", sep="")] <- scale(temp)
+        df[paste(input$variable, ".standard", sep = "")] <- scale(temp)
         summary_lines <- c(summary_lines, "Created a new feature by standard scaling an existing column.")
       }
       
