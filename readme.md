@@ -78,4 +78,11 @@ shiny::runApp()
   - Created proper response and status texts for feature engineering
   - Developed multiple methods of singular feature engineering
 
-- Member 4: EDA Module  
+- Kuangda Qu
+  - Designed and implemented the EDA module of the Shiny application
+  - Built interactive visualizations, including histogram, scatter plot, boxplot, and bar chart
+  - Implemented dynamic filtering for both numeric and categorical variables
+  - Improved the overall UI/UX of the EDA page by organizing controls and outputs into a clear, responsive layout
+  - Integrate the EDA module into the shared reactive data pipeline so that it works with the outputs from the loading, cleaning, and feature engineering modules
+
+
