@@ -71,10 +71,9 @@ shiny::runApp()
   - Deployed the application to shinyapps.io  
 
 - Zhengxuan Xiao
--  Designed and implemented the data cleaning module using Shiny
-- Developed key preprocessing functionalities such as duplicate removal, missing value handling, normalization, and outlier detection.
-- Created a dynamic cleaning summary and data preview interface to help users understand the impact of each operation.
-
+  - Designed and implemented the data cleaning module
+  - Developed key preprocessing functionalities such as duplicate removal, missing value handling, normalization, and outlier detection.
+  - Created a dynamic cleaning summary and data preview interface to help users understand the impact of each operation.
 
 - Justine Dugger-Ades
   - Designed and implemented the Feature Engineering Module
