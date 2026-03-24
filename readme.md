@@ -61,6 +61,12 @@ shiny::runApp()
   - Integrated built-in and uploaded dataset functionality  
   - Deployed the application to shinyapps.io  
 
-- Zhengxuan Xiao: Data Cleaning Module  
-- Justine Dugger-Ades: Feature Engineering Module  
+- Zhengxuan Xiao: Data Cleaning Module 
+
+- Justine Dugger-Ades
+  - Designed and implemented the Feature Engineering Module
+  - Enabled arithmetic combinations of dataset features
+  - Created proper response and status texts for feature engineering
+  - Developed multiple methods of singular feature engineering
+
 - Member 4: EDA Module  
