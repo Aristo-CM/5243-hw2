@@ -87,5 +87,6 @@ shiny::runApp()
   - Implemented dynamic filtering for both numeric and categorical variables
   - Improved the overall UI/UX of the EDA page by organizing controls and outputs into a clear, responsive layout
   - Integrate the EDA module into the shared reactive data pipeline so that it works with the outputs from the loading, cleaning, and feature engineering modules
+  - Contributed to the final report writing and compilation
 
 
